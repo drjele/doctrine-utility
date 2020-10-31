@@ -1,0 +1,7 @@
+###> generic ###
+/vendor/
+
+/.idea/
+
+/.phpcs-cache
+###< generic ###

@@ -1,0 +1,52 @@
+{
+    "name": "drjele/doctrine-utility",
+    "type": "library",
+    "description": "Doctrine utility library",
+    "keywords": [
+        "doctrine",
+        "utility"
+    ],
+    "homepage": "https://gitlab.com/drjele/doctrine-type",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Adrian Jeledintan",
+            "email": "adrian.jeledintan@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4",
+        "doctrine/orm": "^2.7.3"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "squizlabs/php_codesniffer": "^3.5"
+    },
+    "repositories": [
+    ],
+    "autoload": {
+        "psr-4": {
+            "Drjele\\DoctrineUtility\\": "src/"
+        }
+    },
+    "scripts": {
+        "install-hooks": [
+            "[ $COMPOSER_DEV_MODE -eq 1 ] && rm -rf .git/hooks && ln -s ../scripts/git_hooks .git/hooks || exit 0"
+        ],
+        "post-install-cmd": [
+            "@install-hooks"
+        ],
+        "post-update-cmd": [
+            "@install-hooks"
+        ]
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "extra": {
+        "exclude": [
+            "/scripts",
+            "/.php_cs.dist",
+            "/phpcs.xml.dist"
+        ]
+    }
+}
