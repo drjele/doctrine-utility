@@ -1,3 +1,5 @@
 # Doctrine utility library
 
-Doctrine custom types.
+Doctrine custom types and functions.
+
+Any suggestions are welcomed.
