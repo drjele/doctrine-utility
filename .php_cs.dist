@@ -32,6 +32,10 @@ $config = PhpCsFixer\Config::create()
             'no_superfluous_phpdoc_tags' => true,
             'phpdoc_add_missing_param_annotation' => false,
             'single_line_throw' => false,
+            'native_function_casing' => true,
+            'native_function_type_declaration_casing' => true,
+            'native_constant_invocation' => true,
+            'native_function_invocation' => true,
         ]
     )
     ->setUsingCache(false)

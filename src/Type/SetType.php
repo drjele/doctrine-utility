@@ -14,12 +14,15 @@ use Drjele\DoctrineUtility\Exception\Exception;
 
 class SetType extends AbstractType
 {
-    protected const NAME = 'set';
+    public function getName(): string
+    {
+        return 'set';
+    }
 
     public function convertToDatabaseValue($values, AbstractPlatform $platform): ?string
     {
         if (\is_array($values)) {
-            return empty($values) ? '0' : implode(',', (array)$values);
+            return empty($values) ? '0' : \implode(',', (array)$values);
         }
 
         return (null === $values) ? null : $values;
@@ -27,8 +30,8 @@ class SetType extends AbstractType
 
     public function convertToPHPValue($values, AbstractPlatform $platform): ?array
     {
-        return (null === $values) ? null : array_filter(
-            explode(',', $values),
+        return (null === $values) ? null : \array_filter(
+            \explode(',', $values),
             function ($value) {
                 return 0 != \strlen($value);
             }
@@ -44,7 +47,7 @@ class SetType extends AbstractType
         }
 
         if ($platform instanceof MySqlPlatform) {
-            return 'SET(' . implode(',', $values) . ')';
+            return 'SET(' . \implode(',', $values) . ')';
         }
 
         return $platform->getIntegerTypeDeclarationSQL($fieldDeclaration);
@@ -53,9 +56,11 @@ class SetType extends AbstractType
     private function getValues(array $field): array
     {
         if (!empty($field['values']) && \is_array($field['values'])) {
-            return array_values($field['values']);
+            return \array_values($field['values']);
         }
 
-        throw new Exception('Field "' . $field['name'] . '" declaration is missing "values".');
+        throw new Exception(
+            \sprintf('Field "%s" declaration is missing "values"', $field['name'])
+        );
     }
 }

@@ -31,15 +31,15 @@ class MySqlWalker extends SqlWalker
         $result = parent::walkFromClause($fromClause);
 
         if ($index = $this->getQuery()->getHint(self::HINT_USE_INDEX)) {
-            $result = preg_replace($regex, '\1 USE INDEX (' . $index . ')', $result);
+            $result = \preg_replace($regex, '\1 USE INDEX (' . $index . ')', $result);
         }
 
         if ($index = $this->getQuery()->getHint(self::HINT_IGNORE_INDEX)) {
-            $result = preg_replace($regex, '\1 IGNORE INDEX (' . $index . ')', $result);
+            $result = \preg_replace($regex, '\1 IGNORE INDEX (' . $index . ')', $result);
         }
 
         if ($index = $this->getQuery()->getHint(self::HINT_FORCE_INDEX)) {
-            $result = preg_replace($regex, '\1 FORCE INDEX (' . $index . ')', $result);
+            $result = \preg_replace($regex, '\1 FORCE INDEX (' . $index . ')', $result);
         }
 
         return $result;
@@ -66,8 +66,8 @@ class MySqlWalker extends SqlWalker
                 throw new Exception('Ignore index on join hint with invalid parameters!');
             }
 
-            if (preg_match('/`' . $table . '`/', $result)) {
-                $result = preg_replace('/ON/', 'IGNORE INDEX (' . $index . ') ON', $result);
+            if (\preg_match('/`' . $table . '`/', $result)) {
+                $result = \preg_replace('/ON/', 'IGNORE INDEX (' . $index . ') ON', $result);
             }
         }
 

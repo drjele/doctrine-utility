@@ -31,6 +31,10 @@ class DateFormat extends FunctionNode
 
     public function getSql(SqlWalker $sqlWalker): string
     {
-        return 'DATE_FORMAT(' . $this->firstDateExpression->dispatch($sqlWalker) . ', ' . $this->secondDateExpression->dispatch($sqlWalker) . ')';
+        return \sprintf(
+            'DATE_FORMAT(%s, %s)',
+            $this->firstDateExpression->dispatch($sqlWalker),
+            $this->secondDateExpression->dispatch($sqlWalker)
+        );
     }
 }

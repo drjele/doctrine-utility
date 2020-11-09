@@ -14,11 +14,9 @@ use Doctrine\DBAL\Types\DateTimeType;
 
 class TimestampType extends DateTimeType
 {
-    protected const NAME = 'timestamp';
-
-    public function getName()
+    public function getName(): string
     {
-        return static::NAME;
+        return 'timestamp';
     }
 
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): ?string

@@ -8,13 +8,13 @@ declare(strict_types=1);
 
 namespace Drjele\DoctrineUtility\Query;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
+use Drjele\DoctrineUtility\Exception\Exception;
 
 class JsonSearch extends FunctionNode
 {
@@ -43,15 +43,15 @@ class JsonSearch extends FunctionNode
                 foreach ($this->jsonPaths as $path) {
                     $jsonPaths[] = $sqlWalker->walkStringPrimary($path);
                 }
-                $searchArgs .= ', ' . implode(', ', $jsonPaths);
+                $searchArgs .= ', ' . \implode(', ', $jsonPaths);
             }
         }
 
         if ($sqlWalker->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
-            return sprintf('%s(%s, %s, %s)', static::FUNCTION_NAME, $jsonDoc, $mode, $searchArgs);
+            return \sprintf('%s(%s, %s, %s)', static::FUNCTION_NAME, $jsonDoc, $mode, $searchArgs);
         }
 
-        throw DBALException::notSupported(static::FUNCTION_NAME);
+        throw new Exception(\sprintf('Method "%s" is not suported', static::FUNCTION_NAME));
     }
 
     public function parse(Parser $parser): void
@@ -87,20 +87,22 @@ class JsonSearch extends FunctionNode
         $lexer = $parser->getLexer();
         $value = $lexer->lookahead['value'];
 
-        if (0 === strcasecmp(self::MODE_ONE, $value)) {
+        if (0 === \strcasecmp(self::MODE_ONE, $value)) {
             $this->mode = self::MODE_ONE;
             $parser->StringPrimary();
 
             return;
         }
 
-        if (0 === strcasecmp(self::MODE_ALL, $value)) {
+        if (0 === \strcasecmp(self::MODE_ALL, $value)) {
             $this->mode = self::MODE_ALL;
             $parser->StringPrimary();
 
             return;
         }
 
-        throw DBALException::notSupported("Mode '{$value}' is not supported by " . static::FUNCTION_NAME . '.');
+        throw new Exception(
+            \sprintf('Mode "%s" is not suported by "%s"', $value, static::FUNCTION_NAME)
+        );
     }
 }

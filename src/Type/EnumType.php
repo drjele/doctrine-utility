@@ -14,7 +14,10 @@ use Drjele\DoctrineUtility\Exception\Exception;
 
 class EnumType extends AbstractType
 {
-    protected const NAME = 'enum';
+    public function getName(): string
+    {
+        return 'enum';
+    }
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
@@ -35,7 +38,7 @@ class EnumType extends AbstractType
         }
 
         if ($platform instanceof MySqlPlatform) {
-            return 'ENUM(' . implode(',', $values) . ')';
+            return 'ENUM(' . \implode(',', $values) . ')';
         }
 
         return $platform->getIntegerTypeDeclarationSQL($fieldDeclaration);
@@ -44,9 +47,9 @@ class EnumType extends AbstractType
     private function getValues(array $field): array
     {
         if (!empty($field['values']) && \is_array($field['values'])) {
-            return array_values($field['values']);
+            return \array_values($field['values']);
         }
 
-        throw new Exception('Field "' . $field['name'] . '" declaration is missing "values".');
+        throw new Exception(\sprintf('Field "%s" declaration is missing "values"', $field['name']));
     }
 }

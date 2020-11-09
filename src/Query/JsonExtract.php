@@ -8,13 +8,13 @@ declare(strict_types=1);
 
 namespace Drjele\DoctrineUtility\Query;
 
-use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
+use Drjele\DoctrineUtility\Exception\Exception;
 
 class JsonExtract extends FunctionNode
 {
@@ -34,10 +34,10 @@ class JsonExtract extends FunctionNode
         }
 
         if ($sqlWalker->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
-            return sprintf('%s(%s, %s)', static::FUNCTION_NAME, $jsonDoc, implode(', ', $paths));
+            return \sprintf('%s(%s, %s)', static::FUNCTION_NAME, $jsonDoc, \implode(', ', $paths));
         }
 
-        throw DBALException::notSupported(static::FUNCTION_NAME);
+        throw new Exception(\sprintf('Method "%s" is not suported', static::FUNCTION_NAME));
     }
 
     public function parse(Parser $parser): void
