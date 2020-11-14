@@ -4,7 +4,10 @@
     "description": "Doctrine utility library",
     "keywords": [
         "doctrine",
-        "utility"
+        "symfony",
+        "doctrine type",
+        "doctrine query",
+        "repository"
     ],
     "homepage": "https://gitlab.com/drjele/doctrine-type",
     "license": "MIT",
