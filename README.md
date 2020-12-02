@@ -44,6 +44,12 @@ class Product
      * @ORM\Column(type="string", length=64, nullable=false, unique=true)
      */
     private string $barcode;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ProductType::class, fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(nullable=false, onDelete="RESTRICT")
+     */
+    private ProductType $productType;
 }
 ```
 
