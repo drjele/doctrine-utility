@@ -1,7 +1,15 @@
 ###> generic ###
 /vendor/
-
 /.idea/
+###> generic ###
 
+###> squizlabs php codesniffer ###
 /.phpcs-cache
-###< generic ###
+/phpcs.xml
+###< squizlabs php codesniffer ###
+
+###> symfony phpunit bridge ###
+/.phpunit
+/.phpunit.result.cache
+/phpunit.xml
+###< symfony phpunit bridge ###

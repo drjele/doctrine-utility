@@ -3,7 +3,7 @@ $header = 'Copyright (c) Adrian Jeledintan';
 
 $finder = PhpCsFixer\Finder::create()
     ->exclude([__DIR__ . '/vendor/'])
-    ->in([__DIR__ . '/src/']);
+    ->in([__DIR__ . '/src/', __DIR__ . '/tests/']);
 
 $config = PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
