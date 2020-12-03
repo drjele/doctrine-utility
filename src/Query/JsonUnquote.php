@@ -18,7 +18,7 @@ use Drjele\DoctrineUtility\Exception\Exception;
 
 class JsonUnquote extends FunctionNode
 {
-    const FUNCTION_NAME = 'JSON_UNQUOTE';
+    public const FUNCTION_NAME = 'JSON_UNQUOTE';
 
     public Node $jsonValExpr;
 

@@ -9,7 +9,7 @@ Any suggestions are welcomed.
 ## Usage for \Drjele\DoctrineUtility\Repository\AbstractRepository and \Drjele\DoctrineUtility\Repository\DoctrineRepository 
 
 The purposes for this classes are:
-* Easier constructor injection for the "repositories". The quotes are because these repositories are actual **read services**.
+* Easier constructor injection for the "repositories". The quotes are because these repositories are actual **read services** (in CRUD methodology).
 * Code reuse by using custom filters and join "filters".
 * Better find usages for methods because you are forced to implement only what you need.
 

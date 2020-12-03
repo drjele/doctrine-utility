@@ -17,7 +17,7 @@ use Drjele\DoctrineUtility\Exception\Exception;
 
 class JsonContainsPath extends JsonSearch
 {
-    const FUNCTION_NAME = 'JSON_CONTAINS_PATH';
+    public const FUNCTION_NAME = 'JSON_CONTAINS_PATH';
 
     public Node $firstJsonPathExpr;
 

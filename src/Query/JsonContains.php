@@ -18,7 +18,7 @@ use Drjele\DoctrineUtility\Exception\Exception;
 
 class JsonContains extends FunctionNode
 {
-    const FUNCTION_NAME = 'JSON_CONTAINS';
+    public const FUNCTION_NAME = 'JSON_CONTAINS';
 
     public Node $jsonDocExpr;
     public Node $jsonValExpr;

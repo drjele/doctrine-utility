@@ -18,11 +18,11 @@ use Drjele\DoctrineUtility\Exception\Exception;
  */
 class MySqlWalker extends SqlWalker
 {
-    const HINT_USE_INDEX = 'MySqlWalker.UseIndex';
-    const HINT_IGNORE_INDEX = 'MySqlWalker.IgnoreIndex';
-    const HINT_FORCE_INDEX = 'MySqlWalker.ForceIndex';
-    const HINT_SELECT_FOR_UPDATE = 'MySqlWalker.SelectForUpdate';
-    const HINT_IGNORE_INDEX_ON_JOIN = 'MySqlWalker.IgnoreIndexOnJoin';
+    public const HINT_USE_INDEX = 'MySqlWalker.UseIndex';
+    public const HINT_IGNORE_INDEX = 'MySqlWalker.IgnoreIndex';
+    public const HINT_FORCE_INDEX = 'MySqlWalker.ForceIndex';
+    public const HINT_SELECT_FOR_UPDATE = 'MySqlWalker.SelectForUpdate';
+    public const HINT_IGNORE_INDEX_ON_JOIN = 'MySqlWalker.IgnoreIndexOnJoin';
 
     public function walkFromClause($fromClause): string
     {

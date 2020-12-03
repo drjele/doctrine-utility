@@ -5,8 +5,8 @@
     "keywords": [
         "doctrine",
         "symfony",
-        "doctrine type",
-        "doctrine query",
+        "type",
+        "query",
         "repository"
     ],
     "homepage": "https://gitlab.com/drjele/doctrine-type",

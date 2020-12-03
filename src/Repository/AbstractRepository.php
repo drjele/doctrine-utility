@@ -16,23 +16,23 @@ use Drjele\DoctrineUtility\Join\JoinCollection;
 
 abstract class AbstractRepository
 {
-    const JOIN_LEFT = Join::LEFT_JOIN;
-    const JOIN_INNER = Join::INNER_JOIN;
+    public const JOIN_LEFT = Join::LEFT_JOIN;
+    public const JOIN_INNER = Join::INNER_JOIN;
 
     private ManagerRegistry $managerRegistry;
 
-    public function setManagerRegistry(ManagerRegistry $managerRegistry): self
+    abstract public static function getAlias(): string;
+
+    abstract public static function getEntityClass(): string;
+
+    final public function setManagerRegistry(ManagerRegistry $managerRegistry): self
     {
         $this->managerRegistry = $managerRegistry;
 
         return $this;
     }
 
-    abstract public static function getAlias(): string;
-
-    abstract public static function getEntityClass(): string;
-
-    public function findBy(array $filters, bool $selectJoins = false): array
+    final public function findBy(array $filters, bool $selectJoins = false): array
     {
         return $this->createQueryBuilderFromFilters($filters, $selectJoins)->getQuery()->getResult();
     }

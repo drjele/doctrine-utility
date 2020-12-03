@@ -18,7 +18,7 @@ use Drjele\DoctrineUtility\Exception\Exception;
 
 class JsonExtract extends FunctionNode
 {
-    const FUNCTION_NAME = 'JSON_EXTRACT';
+    public const FUNCTION_NAME = 'JSON_EXTRACT';
 
     public Node $jsonDocExpr;
     public Node $firstJsonPathExpr;

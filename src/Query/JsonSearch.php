@@ -18,10 +18,10 @@ use Drjele\DoctrineUtility\Exception\Exception;
 
 class JsonSearch extends FunctionNode
 {
-    const FUNCTION_NAME = 'JSON_SEARCH';
+    public const FUNCTION_NAME = 'JSON_SEARCH';
 
-    const MODE_ONE = 'one';
-    const MODE_ALL = 'all';
+    public const MODE_ONE = 'one';
+    public const MODE_ALL = 'all';
 
     public string $mode;
     public Node $jsonDocExpr;

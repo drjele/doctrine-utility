@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait CreatedTrait
 {
     /**
-     * @ORM\Column(type="timestamp", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private ?DateTime $created;
 
