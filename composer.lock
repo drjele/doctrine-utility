@@ -1989,16 +1989,16 @@
         },
         {
             "name": "drjele/symfony-phpunit",
-            "version": "v1.1.1",
+            "version": "v1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/drjele-symfony/phpunit.git",
-                "reference": "dbf281151aebac91e1aac57550377183a69b2d64"
+                "reference": "cdb6a7066d6fd28f98f199addbdbc097ba24cfef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/drjele-symfony%2Fphpunit/repository/archive.zip?sha=dbf281151aebac91e1aac57550377183a69b2d64",
-                "reference": "dbf281151aebac91e1aac57550377183a69b2d64",
+                "url": "https://gitlab.com/api/v4/projects/drjele-symfony%2Fphpunit/repository/archive.zip?sha=cdb6a7066d6fd28f98f199addbdbc097ba24cfef",
+                "reference": "cdb6a7066d6fd28f98f199addbdbc097ba24cfef",
                 "shasum": ""
             },
             "require": {
@@ -2016,8 +2016,10 @@
             "extra": {
                 "exclude": [
                     "/scripts",
+                    "/tests",
                     "/.php_cs.dist",
-                    "/phpcs.xml.dist"
+                    "/phpcs.xml.dist",
+                    "/phpunit.xml.dist"
                 ]
             },
             "autoload": {
@@ -2044,7 +2046,7 @@
             "support": {
                 "issues": "https://gitlab.com/api/v4/projects/21712413/issues"
             },
-            "time": "2020-12-02T13:57:32+00:00"
+            "time": "2020-12-02T14:48:10+00:00"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
