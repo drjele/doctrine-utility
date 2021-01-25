@@ -1,6 +1,7 @@
 ###> generic ###
 /vendor/
 /.idea/
+/auth.json
 ###> generic ###
 
 ###> squizlabs php codesniffer ###
