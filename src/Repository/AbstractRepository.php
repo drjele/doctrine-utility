@@ -34,12 +34,6 @@ abstract class AbstractRepository
         return $this;
     }
 
-    /** to allow mocking this may not be final */
-    public function findBy(array $filters, bool $selectJoins = false): array
-    {
-        return $this->createQueryBuilderFromFilters($filters, $selectJoins)->getQuery()->getResult();
-    }
-
     final protected function execute(string $query, array $parameters = []): Statement
     {
         /** @var Connection $connection */
