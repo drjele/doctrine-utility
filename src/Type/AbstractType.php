@@ -13,8 +13,13 @@ use Doctrine\DBAL\Types\Type;
 
 abstract class AbstractType extends Type
 {
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    final public function requiresSQLCommentHint(AbstractPlatform $platform)
     {
         return true;
+    }
+
+    final public function getName(): string
+    {
+        return (new \ReflectionClass($this))->getShortName();
     }
 }

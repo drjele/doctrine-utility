@@ -8,6 +8,6 @@ declare(strict_types=1);
 
 namespace Drjele\DoctrineUtility\Exception;
 
-class Exception extends \Exception
+class InvalidTypeValueException extends Exception
 {
 }

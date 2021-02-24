@@ -10,19 +10,29 @@ namespace Drjele\DoctrineUtility\Type;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
-use Drjele\DoctrineUtility\Exception\Exception;
+use Drjele\DoctrineUtility\Exception\InvalidTypeValueException;
 
-class SetType extends AbstractType
+abstract class AbstractSetType extends AbstractType
 {
-    public function getName(): string
-    {
-        return 'set';
-    }
+    abstract public function getValues(): array;
 
     public function convertToDatabaseValue($values, AbstractPlatform $platform): ?string
     {
-        if (\is_array($values)) {
-            return empty($values) ? '0' : \implode(',', (array)$values);
+        if (null !== $values) {
+            $values = (array)$values;
+
+            if ($diff = \array_diff($values, $this->getValues())) {
+                throw new InvalidTypeValueException(
+                    \sprintf(
+                        'Invalid value "%s", expected one of "%s", for "%s"!',
+                        \implode(', ', $diff),
+                        \implode(', ', $this->getValues()),
+                        $this->getName()
+                    )
+                );
+            }
+
+            $values = empty($values) ? '0' : \implode(',', $values);
         }
 
         return (null === $values) ? null : $values;
@@ -30,19 +40,14 @@ class SetType extends AbstractType
 
     public function convertToPHPValue($values, AbstractPlatform $platform): ?array
     {
-        return (null === $values) ? null : \array_filter(
-            \explode(',', $values),
-            function ($value) {
-                return 0 != \strlen($value);
-            }
-        );
+        return (null === $values) ? null : \explode(',', $values);
     }
 
     public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
         $values = [];
 
-        foreach ($this->getValues($fieldDeclaration) as $value) {
+        foreach ($this->getValues() as $value) {
             $values[] = $platform->quoteStringLiteral($value);
         }
 
@@ -51,16 +56,5 @@ class SetType extends AbstractType
         }
 
         return $platform->getIntegerTypeDeclarationSQL($fieldDeclaration);
-    }
-
-    private function getValues(array $field): array
-    {
-        if (!empty($field['values']) && \is_array($field['values'])) {
-            return \array_values($field['values']);
-        }
-
-        throw new Exception(
-            \sprintf('Field "%s" declaration is missing "values"', $field['name'])
-        );
     }
 }

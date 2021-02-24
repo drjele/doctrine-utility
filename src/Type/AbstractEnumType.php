@@ -10,17 +10,25 @@ namespace Drjele\DoctrineUtility\Type;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
-use Drjele\DoctrineUtility\Exception\Exception;
+use Drjele\DoctrineUtility\Exception\InvalidTypeValueException;
 
-class EnumType extends AbstractType
+abstract class AbstractEnumType extends AbstractType
 {
-    public function getName(): string
-    {
-        return 'enum';
-    }
+    abstract public function getValues(): array;
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
+        if (null !== $value && !\in_array($value, $this->getValues())) {
+            throw new InvalidTypeValueException(
+                \sprintf(
+                    'Invalid value "%s", expected one of "%s", for "%s"!',
+                    $value,
+                    \implode(', ', $this->getValues()),
+                    $this->getName()
+                )
+            );
+        }
+
         return (null === $value) ? null : (string)$value;
     }
 
@@ -33,7 +41,7 @@ class EnumType extends AbstractType
     {
         $values = [];
 
-        foreach ($this->getValues($fieldDeclaration) as $value) {
+        foreach ($this->getValues() as $value) {
             $values[] = $platform->quoteStringLiteral($value);
         }
 
@@ -42,14 +50,5 @@ class EnumType extends AbstractType
         }
 
         return $platform->getIntegerTypeDeclarationSQL($fieldDeclaration);
-    }
-
-    private function getValues(array $field): array
-    {
-        if (!empty($field['values']) && \is_array($field['values'])) {
-            return \array_values($field['values']);
-        }
-
-        throw new Exception(\sprintf('Field "%s" declaration is missing "values"', $field['name']));
     }
 }

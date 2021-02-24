@@ -56,9 +56,12 @@ class MySqlWalker extends SqlWalker
         return $result;
     }
 
-    public function walkJoinAssociationDeclaration($joinAssociationDeclaration, $joinType = Join::JOIN_TYPE_INNER, $condExpr = null): string
-    {
-        $result = parent::walkJoinAssociationDeclaration($joinAssociationDeclaration, $joinType, $condExpr);
+    public function walkJoinAssociationDeclaration(
+        $joinAssociationDeclaration,
+        $joinType = Join::JOIN_TYPE_INNER,
+        $condition = null
+    ): string {
+        $result = parent::walkJoinAssociationDeclaration($joinAssociationDeclaration, $joinType, $condition);
 
         if ($ignoreIndex = $this->getQuery()->getHint(static::HINT_IGNORE_INDEX_ON_JOIN)) {
             [$index, $table] = $ignoreIndex;

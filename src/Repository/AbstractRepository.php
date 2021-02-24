@@ -44,7 +44,7 @@ abstract class AbstractRepository
         $executed = $stmt->execute($parameters);
 
         if (!$executed) {
-            throw new Exception(\sprintf('could not execute "%s"', $query));
+            throw new Exception(\sprintf('Could not execute "%s"!', $query));
         }
 
         return $stmt;
@@ -146,7 +146,7 @@ abstract class AbstractRepository
                     );
                     break;
                 default:
-                    throw new Exception(\sprintf('Invalid join type "%s"', $join->getJoinType()));
+                    throw new Exception(\sprintf('Invalid join type "%s"!', $join->getJoinType()));
                     break;
             }
         }
@@ -160,7 +160,7 @@ abstract class AbstractRepository
     protected function attachCustomFilters(QueryBuilder $qb, array $filters): JoinCollection
     {
         throw new Exception(
-            \sprintf('Overwrite "%s" in "%s"', __METHOD__, static::class)
+            \sprintf('Overwrite "%s" in "%s"!', __METHOD__, static::class)
         );
     }
 }

@@ -30,7 +30,7 @@ class JsonUnquote extends FunctionNode
             return \sprintf('%s(%s)', static::FUNCTION_NAME, $jsonVal);
         }
 
-        throw new Exception(\sprintf('Method "%s" is not suported', static::FUNCTION_NAME));
+        throw new Exception(\sprintf('Method "%s" is not suported!', static::FUNCTION_NAME));
     }
 
     public function parse(Parser $parser): void

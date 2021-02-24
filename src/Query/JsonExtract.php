@@ -37,7 +37,7 @@ class JsonExtract extends FunctionNode
             return \sprintf('%s(%s, %s)', static::FUNCTION_NAME, $jsonDoc, \implode(', ', $paths));
         }
 
-        throw new Exception(\sprintf('Method "%s" is not suported', static::FUNCTION_NAME));
+        throw new Exception(\sprintf('Method "%s" is not suported!', static::FUNCTION_NAME));
     }
 
     public function parse(Parser $parser): void
