@@ -23,9 +23,12 @@ abstract class AbstractRepository
 
     private ManagerRegistry $managerRegistry;
 
-    abstract public static function getAlias(): string;
-
     abstract public static function getEntityClass(): string;
+
+    public static function getAlias(): string
+    {
+        return \lcfirst((new \ReflectionClass(static::class))->getShortName());
+    }
 
     final public function setManagerRegistry(ManagerRegistry $managerRegistry): self
     {
