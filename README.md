@@ -6,14 +6,16 @@ Doctrine custom types and functions.
 
 Any suggestions are welcomed.
 
-## Usage for \Drjele\DoctrineUtility\Repository\AbstractRepository and \Drjele\DoctrineUtility\Repository\DoctrineRepository 
+## Usage for \Drjele\DoctrineUtility\Repository\AbstractRepository and \Drjele\DoctrineUtility\Repository\DoctrineRepository
 
 The purposes for this classes are:
+
 * Easier constructor injection for the "repositories". The quotes are because these repositories are actual **read services** (in CRUD methodology).
 * Code reuse by using custom filters and join "filters".
 * Better find usages for methods because you are forced to implement only what you need.
 
 **Product.php**
+
 ```php
 namespace Acme\Domain\Product\Entity;
 
@@ -54,6 +56,7 @@ class Product
 ```
 
 **ProductRepository.php**
+
 ```php
 namespace Acme\Domain\Product\Repository;
 
@@ -68,10 +71,7 @@ use Drjele\DoctrineUtility\Repository\AbstractRepository;
 
 class ProductRepository extends AbstractRepository
 {
-    public static function getAlias(): string
-    {
-        return 'product';
-    }
+    public const JOIN_PRODUCT_TYPE = 'joinProductType';
 
     public static function getEntityClass(): string
     {
@@ -102,7 +102,7 @@ class ProductRepository extends AbstractRepository
                     $qb->andWhere(static::getAlias() . ".{$baseKey} LIKE :{$key}")
                         ->setParameter($key, $value);
                     break;
-                case 'joinProductType':
+                case static::JOIN_PRODUCT_TYPE:
                     $joins->addJoin(
                         new Join(
                             $value,
@@ -111,8 +111,7 @@ class ProductRepository extends AbstractRepository
                         )
                     );
                 default:
-                    throw new Exception("Invalid filter `{$key}` for `" . static::class . '::' . __FUNCTION__ . '`');
-                    break;
+                    throw new Exception(\sprintf('Invalid filter `%s` for `%s::%s`', $key, static::class, __FUNCTION__));
             }
         }
 
