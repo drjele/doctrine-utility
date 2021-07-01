@@ -18,7 +18,7 @@ abstract class AbstractEnumType extends AbstractType
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {
-        if (null !== $value && !\in_array($value, $this->getValues())) {
+        if (null !== $value && !\in_array($value, $this->getValues(), true)) {
             throw new InvalidTypeValueException(
                 \sprintf(
                     'Invalid value "%s", expected one of "%s", for "%s"!',
@@ -29,12 +29,12 @@ abstract class AbstractEnumType extends AbstractType
             );
         }
 
-        return (null === $value) ? null : (string)$value;
+        return (null === $value) ? null : (string) $value;
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform): ?string
     {
-        return (null === $value) ? null : (string)$value;
+        return (null === $value) ? null : (string) $value;
     }
 
     public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string

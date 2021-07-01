@@ -65,7 +65,7 @@ class MySqlWalker extends SqlWalker
 
         if ($ignoreIndex = $this->getQuery()->getHint(static::HINT_IGNORE_INDEX_ON_JOIN)) {
             [$index, $table] = $ignoreIndex;
-            if (2 != \count($ignoreIndex) || empty($table)) {
+            if (2 !== \count($ignoreIndex) || empty($table)) {
                 throw new Exception('Ignore index on join hint with invalid parameters!');
             }
 

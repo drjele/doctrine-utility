@@ -17,7 +17,7 @@ class DateTimeType extends \Doctrine\DBAL\Types\DateTimeType
     {
         $sqlDeclaration = parent::getSQLDeclaration($fieldDeclaration, $platform);
 
-        if (($platform instanceof MySqlPlatform) && false == empty($fieldDeclaration['update'])) {
+        if (($platform instanceof MySqlPlatform) && false === empty($fieldDeclaration['update'])) {
             return $sqlDeclaration . ' ON UPDATE CURRENT_TIMESTAMP';
         }
 
