@@ -71,7 +71,7 @@ abstract class AbstractRepository
 
         $joinCollection = $this->attachFilters($qb, $filters);
 
-        if (true === $selectJoins) {
+        if (true === $selectJoins && null !== $joinCollection) {
             $qb->addSelect($joinCollection->getAliases());
         }
 
