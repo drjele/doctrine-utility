@@ -9,7 +9,7 @@ declare(strict_types=1);
 namespace Drjele\DoctrineUtility\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Result;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -37,20 +37,14 @@ abstract class AbstractRepository
         return $this;
     }
 
-    final protected function execute(string $query, array $parameters = []): Statement
+    final protected function execute(string $query, array $parameters = []): Result
     {
         /** @var Connection $connection */
         $connection = $this->managerRegistry->getConnection();
 
         $stmt = $connection->prepare($query);
 
-        $executed = $stmt->execute($parameters);
-
-        if (!$executed) {
-            throw new Exception(\sprintf('Could not execute "%s"!', $query));
-        }
-
-        return $stmt;
+        return $stmt->executeQuery($parameters);
     }
 
     final protected function getManagerRegistry(): ?ManagerRegistry
