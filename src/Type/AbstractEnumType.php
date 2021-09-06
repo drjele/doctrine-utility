@@ -29,12 +29,12 @@ abstract class AbstractEnumType extends AbstractType
             );
         }
 
-        return (null === $value) ? null : (string) $value;
+        return (null === $value) ? null : (string)$value;
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform): ?string
     {
-        return (null === $value) ? null : (string) $value;
+        return (null === $value) ? null : (string)$value;
     }
 
     public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string

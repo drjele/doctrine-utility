@@ -144,7 +144,6 @@ abstract class AbstractRepository
                     break;
                 default:
                     throw new Exception(\sprintf('Invalid join type "%s"!', $join->getJoinType()));
-                    break;
             }
         }
     }
