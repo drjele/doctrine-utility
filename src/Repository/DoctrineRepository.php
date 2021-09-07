@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Copyright (c) Adrian Jeledintan
  */
 
-namespace Drjele\DoctrineUtility\Repository;
+namespace Drjele\Doctrine\Utility\Repository;
 
 use Doctrine\ORM\EntityRepository;
 

@@ -6,10 +6,10 @@ declare(strict_types=1);
  * Copyright (c) Adrian Jeledintan
  */
 
-namespace Drjele\DoctrineUtility\Join;
+namespace Drjele\Doctrine\Utility\Join;
 
 use Doctrine\ORM\Query\Expr\Join;
-use Drjele\DoctrineUtility\Exception\Exception;
+use Drjele\Doctrine\Utility\Exception\Exception;
 
 class JoinCollection
 {

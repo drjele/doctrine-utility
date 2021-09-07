@@ -6,7 +6,7 @@ Doctrine custom types and functions.
 
 Any suggestions are welcomed.
 
-## Usage for \Drjele\DoctrineUtility\Repository\AbstractRepository and \Drjele\DoctrineUtility\Repository\DoctrineRepository
+## Usage for \Drjele\Doctrine\Utility\Repository\AbstractRepository and \Drjele\Doctrine\Utility\Repository\DoctrineRepository
 
 The purposes for this classes are:
 
@@ -20,9 +20,9 @@ The purposes for this classes are:
 namespace Acme\Domain\Product\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Drjele\DoctrineUtility\Entity\CreatedTrait;
-use Drjele\DoctrineUtility\Entity\ModifiedTrait;
-use Drjele\DoctrineUtility\Repository\DoctrineRepository;
+use Drjele\Doctrine\Utility\Entity\CreatedTrait;
+use Drjele\Doctrine\Utility\Entity\ModifiedTrait;
+use Drjele\Doctrine\Utility\Repository\DoctrineRepository;
 
 /**
  * @ORM\Entity(repositoryClass=DoctrineRepository::class)
@@ -66,8 +66,8 @@ use Acme\Domain\Product\Exception\NotFoundException;
 use Acme\Domain\Product\Repository\ProductTypeRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
-use Drjele\DoctrineUtility\Join\JoinCollection;
-use Drjele\DoctrineUtility\Repository\AbstractRepository;
+use Drjele\Doctrine\Utility\Join\JoinCollection;
+use Drjele\Doctrine\Utility\Repository\AbstractRepository;
 
 class ProductRepository extends AbstractRepository
 {

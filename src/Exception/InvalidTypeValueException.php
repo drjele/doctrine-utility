@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Copyright (c) Adrian Jeledintan
  */
 
-namespace Drjele\DoctrineUtility\Exception;
+namespace Drjele\Doctrine\Utility\Exception;
 
 class InvalidTypeValueException extends Exception
 {

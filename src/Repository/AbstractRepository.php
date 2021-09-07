@@ -6,15 +6,15 @@ declare(strict_types=1);
  * Copyright (c) Adrian Jeledintan
  */
 
-namespace Drjele\DoctrineUtility\Repository;
+namespace Drjele\Doctrine\Utility\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Drjele\DoctrineUtility\Exception\Exception;
-use Drjele\DoctrineUtility\Join\JoinCollection;
+use Drjele\Doctrine\Utility\Exception\Exception;
+use Drjele\Doctrine\Utility\Join\JoinCollection;
 
 abstract class AbstractRepository
 {

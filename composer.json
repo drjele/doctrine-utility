@@ -22,13 +22,18 @@
         "doctrine/orm": "^2.9"
     },
     "require-dev": {
-        "drjele/symfony-phpunit": "^1.0",
+        "drjele/symfony-phpunit": "^2.0",
         "friendsofphp/php-cs-fixer": "^3.0",
         "squizlabs/php_codesniffer": "^3.6"
     },
     "autoload": {
         "psr-4": {
-            "Drjele\\DoctrineUtility\\": "src/"
+            "Drjele\\Doctrine\\Utility\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Drjele\\Doctrine\\Utility\\Test\\": "tests/"
         }
     },
     "scripts": {

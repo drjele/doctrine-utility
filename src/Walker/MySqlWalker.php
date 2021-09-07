@@ -6,11 +6,11 @@ declare(strict_types=1);
  * Copyright (c) Adrian Jeledintan
  */
 
-namespace Drjele\DoctrineUtility\Walker;
+namespace Drjele\Doctrine\Utility\Walker;
 
 use Doctrine\ORM\Query\AST\Join;
 use Doctrine\ORM\Query\SqlWalker;
-use Drjele\DoctrineUtility\Exception\Exception;
+use Drjele\Doctrine\Utility\Exception\Exception;
 
 /**
  * $qb->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, MySqlWalker::class);
