@@ -15,6 +15,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Drjele\Doctrine\Utility\Exception\Exception;
 use Drjele\Doctrine\Utility\Join\JoinCollection;
+use ReflectionClass;
 
 abstract class AbstractRepository
 {
@@ -27,7 +28,7 @@ abstract class AbstractRepository
 
     public static function getAlias(): string
     {
-        return \lcfirst((new \ReflectionClass(static::class))->getShortName());
+        return \lcfirst((new ReflectionClass(static::class))->getShortName());
     }
 
     final public function setManagerRegistry(ManagerRegistry $managerRegistry): self

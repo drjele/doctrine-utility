@@ -2139,16 +2139,16 @@
         },
         {
             "name": "drjele/symfony-phpunit",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/drjele-symfony/phpunit.git",
-                "reference": "c2a3633661857e6a522848d226dd5cfe6cda4079"
+                "reference": "6780e66ab674870a1fb2945ea821f8a8131ec067"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/drjele-symfony%2Fphpunit/repository/archive.zip?sha=c2a3633661857e6a522848d226dd5cfe6cda4079",
-                "reference": "c2a3633661857e6a522848d226dd5cfe6cda4079",
+                "url": "https://gitlab.com/api/v4/projects/drjele-symfony%2Fphpunit/repository/archive.zip?sha=6780e66ab674870a1fb2945ea821f8a8131ec067",
+                "reference": "6780e66ab674870a1fb2945ea821f8a8131ec067",
                 "shasum": ""
             },
             "require": {
@@ -2190,13 +2190,14 @@
             "description": "Library used to make writing phpunit tests easier",
             "homepage": "https://gitlab.com/drjele-symfony/phpunit",
             "keywords": [
+                "mockery",
                 "phpunit",
                 "symfony"
             ],
             "support": {
                 "issues": "https://gitlab.com/api/v4/projects/21712413/issues"
             },
-            "time": "2021-09-07T11:01:59+00:00"
+            "time": "2021-09-07T11:31:18+00:00"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
