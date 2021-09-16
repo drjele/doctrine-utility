@@ -38,10 +38,10 @@ abstract class AbstractRepository
         return $this;
     }
 
-    final protected function execute(string $query, array $parameters = []): Result
+    final protected function execute(string $query, array $parameters = [], string $connectionName = null): Result
     {
         /** @var Connection $connection */
-        $connection = $this->managerRegistry->getConnection();
+        $connection = $this->managerRegistry->getConnection($connectionName);
 
         $stmt = $connection->prepare($query);
 
@@ -53,18 +53,19 @@ abstract class AbstractRepository
         return $this->managerRegistry;
     }
 
-    final protected function createQueryBuilder(): QueryBuilder
+    final protected function createQueryBuilder(string $managerName = null): QueryBuilder
     {
-        return $this->getDoctrineRepository()->createQueryBuilder(static::getAlias());
+        return $this->getDoctrineRepository($managerName)->createQueryBuilder(static::getAlias());
     }
 
     final protected function createQueryBuilderFromFilters(
         array $filters,
-        bool $selectJoins = false
+        bool $selectJoins = false,
+        string $managerName = null
     ): QueryBuilder {
-        $qb = $this->createQueryBuilder();
+        $qb = $this->createQueryBuilder($managerName);
 
-        $joinCollection = $this->attachFilters($qb, $filters);
+        $joinCollection = $this->attachFilters($qb, $filters, $managerName);
 
         if (true === $selectJoins && null !== $joinCollection) {
             $qb->addSelect($joinCollection->getAliases());
@@ -73,9 +74,12 @@ abstract class AbstractRepository
         return $qb;
     }
 
-    final protected function attachFilters(QueryBuilder $qb, array $filters): ?JoinCollection
-    {
-        [$genericFilters, $customFilters] = $this->sortFilters($filters);
+    final protected function attachFilters(
+        QueryBuilder $qb,
+        array $filters,
+        string $managerName = null
+    ): ?JoinCollection {
+        [$genericFilters, $customFilters] = $this->sortFilters($filters, $managerName);
 
         if ($genericFilters) {
             $this->attachGenericFilters($qb, $genericFilters);
@@ -93,12 +97,12 @@ abstract class AbstractRepository
         return $joinCollection;
     }
 
-    final protected function sortFilters(array $filters): array
+    final protected function sortFilters(array $filters, string $managerName = null): array
     {
         $genericFilters = $customFilters = [];
 
         foreach ($filters as $filter => $value) {
-            if ($this->getDoctrineRepository()->hasField($filter)) {
+            if ($this->getDoctrineRepository($managerName)->hasField($filter)) {
                 $genericFilters[$filter] = $value;
                 continue;
             }
@@ -144,20 +148,28 @@ abstract class AbstractRepository
                     );
                     break;
                 default:
-                    throw new Exception(\sprintf('Invalid join type "%s"!', $join->getJoinType()));
+                    throw new Exception(\sprintf('invalid join type `%s`', $join->getJoinType()));
             }
         }
     }
 
-    final protected function getDoctrineRepository(): DoctrineRepository
+    final protected function getDoctrineRepository(string $managerName = null): DoctrineRepository
     {
-        return $this->managerRegistry->getRepository(static::getEntityClass());
+        $managerName = $managerName ?? $this->getManagerName();
+
+        return $this->managerRegistry->getRepository(static::getEntityClass(), $managerName);
+    }
+
+    protected function getManagerName(): ?string
+    {
+        /* overwrite if the entity has a different manager than the default */
+        return null;
     }
 
     protected function attachCustomFilters(QueryBuilder $qb, array $filters): JoinCollection
     {
         throw new Exception(
-            \sprintf('Overwrite "%s" in "%s"!', __METHOD__, static::class)
+            \sprintf('overwrite `%s` in `%s`', __METHOD__, static::class)
         );
     }
 }

@@ -21,7 +21,7 @@ abstract class AbstractEnumType extends AbstractType
         if (null !== $value && !\in_array($value, $this->getValues(), true)) {
             throw new InvalidTypeValueException(
                 \sprintf(
-                    'Invalid value "%s", expected one of "%s", for "%s"!',
+                    'invalid value `%s`, expected one of `%s`, for `%s`',
                     $value,
                     \implode(', ', $this->getValues()),
                     $this->getName()

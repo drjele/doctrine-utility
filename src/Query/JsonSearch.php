@@ -51,7 +51,7 @@ class JsonSearch extends FunctionNode
             return \sprintf('%s(%s, %s, %s)', static::FUNCTION_NAME, $jsonDoc, $mode, $searchArgs);
         }
 
-        throw new Exception(\sprintf('Method "%s" is not suported!', static::FUNCTION_NAME));
+        throw new Exception(\sprintf('method `%s` is not supported', static::FUNCTION_NAME));
     }
 
     public function parse(Parser $parser): void
@@ -102,7 +102,7 @@ class JsonSearch extends FunctionNode
         }
 
         throw new Exception(
-            \sprintf('Mode "%s" is not suported by "%s"', $value, static::FUNCTION_NAME)
+            \sprintf('mode `%s` is not supported by `%s`', $value, static::FUNCTION_NAME)
         );
     }
 }

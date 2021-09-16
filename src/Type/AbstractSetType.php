@@ -24,7 +24,7 @@ abstract class AbstractSetType extends AbstractType
             if ($diff = \array_diff($values, $this->getValues())) {
                 throw new InvalidTypeValueException(
                     \sprintf(
-                        'Invalid value "%s", expected one of "%s", for "%s"!',
+                        'invalid value `%s`, expected one of `%s`, for `%s`',
                         \implode(', ', $diff),
                         \implode(', ', $this->getValues()),
                         $this->getName()
