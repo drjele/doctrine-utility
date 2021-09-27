@@ -2140,16 +2140,16 @@
         },
         {
             "name": "drjele/symfony-phpunit",
-            "version": "v2.0.2",
+            "version": "v2.0.3",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/drjele-symfony/phpunit.git",
-                "reference": "6bdfd96f464a7e7bf5745fb45a08dcf859de5ed0"
+                "reference": "b7d6d4456e32936ea41179082897bc7d0150e750"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/drjele-symfony%2Fphpunit/repository/archive.zip?sha=6bdfd96f464a7e7bf5745fb45a08dcf859de5ed0",
-                "reference": "6bdfd96f464a7e7bf5745fb45a08dcf859de5ed0",
+                "url": "https://gitlab.com/api/v4/projects/drjele-symfony%2Fphpunit/repository/archive.zip?sha=b7d6d4456e32936ea41179082897bc7d0150e750",
+                "reference": "b7d6d4456e32936ea41179082897bc7d0150e750",
                 "shasum": ""
             },
             "require": {
@@ -2198,7 +2198,7 @@
             "support": {
                 "issues": "https://gitlab.com/api/v4/projects/21712413/issues"
             },
-            "time": "2021-09-09T15:32:09+00:00"
+            "time": "2021-09-27T11:28:00+00:00"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
