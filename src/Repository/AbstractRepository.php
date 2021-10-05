@@ -155,7 +155,7 @@ abstract class AbstractRepository
 
     final protected function getDoctrineRepository(string $managerName = null): DoctrineRepository
     {
-        $managerName = $managerName ?? $this->getManagerName();
+        $managerName ??= $this->getManagerName();
 
         return $this->managerRegistry->getRepository(static::getEntityClass(), $managerName);
     }
