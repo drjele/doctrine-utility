@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bb3cf5f987984ed6b3b5bdbbefd14cc3",
+    "content-hash": "10e7c528e684f4cf81154725abc3812f",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -1084,65 +1084,6 @@
                 "source": "https://github.com/doctrine/persistence/tree/2.2.2"
             },
             "time": "2021-08-10T19:01:29+00:00"
-        },
-        {
-            "name": "drjele/doctrine-type",
-            "version": "v1.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://gitlab.com/drjele-doctrine/type.git",
-                "reference": "b27253b73584b7dcdf8e846d02454b3505d1e7e8"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/drjele-doctrine%2Ftype/repository/archive.zip?sha=b27253b73584b7dcdf8e846d02454b3505d1e7e8",
-                "reference": "b27253b73584b7dcdf8e846d02454b3505d1e7e8",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/dbal": "^3.1",
-                "php": "^7.4|^8.0"
-            },
-            "require-dev": {
-                "drjele/symfony-phpunit": "^2.0",
-                "friendsofphp/php-cs-fixer": "^3.0",
-                "squizlabs/php_codesniffer": "^3.6"
-            },
-            "type": "library",
-            "extra": {
-                "exclude": [
-                    "/scripts",
-                    "/tests",
-                    "/.php_cs.dist",
-                    "/phpcs.xml.dist",
-                    "/phpunit.xml.dist"
-                ]
-            },
-            "autoload": {
-                "psr-4": {
-                    "Drjele\\Doctrine\\Type\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Adrian Jeledintan",
-                    "email": "adrian.jeledintan@gmail.com"
-                }
-            ],
-            "description": "Doctrine type",
-            "homepage": "https://gitlab.com/drjele-doctrine/type",
-            "keywords": [
-                "doctrine",
-                "type"
-            ],
-            "support": {
-                "issues": "https://gitlab.com/api/v4/projects/30216425/issues"
-            },
-            "time": "2021-10-06T08:59:23+00:00"
         },
         {
             "name": "psr/cache",
