@@ -19,7 +19,8 @@
     ],
     "require": {
         "php": "^7.4|^8.0",
-        "doctrine/orm": "^2.9"
+        "doctrine/orm": "^2.9",
+        "drjele/doctrine-type": "^1.0"
     },
     "require-dev": {
         "drjele/symfony-phpunit": "^2.0",
