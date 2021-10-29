@@ -38,6 +38,29 @@ abstract class AbstractRepository
         return $this;
     }
 
+    final public function attachFilters(
+        QueryBuilder $qb,
+        array $filters,
+        string $managerName = null
+    ): ?JoinCollection {
+        [$genericFilters, $customFilters] = $this->sortFilters($filters, $managerName);
+
+        if ($genericFilters) {
+            $this->attachGenericFilters($qb, $genericFilters);
+        }
+
+        $joinCollection = null;
+        if ($customFilters) {
+            $joinCollection = $this->attachCustomFilters($qb, $customFilters);
+        }
+
+        if (isset($joinCollection) && $joinCollection->getJoins()) {
+            $this->attachJoins($qb, $joinCollection);
+        }
+
+        return $joinCollection;
+    }
+
     final protected function execute(string $query, array $parameters = [], string $connectionName = null): Result
     {
         /** @var Connection $connection */
@@ -74,29 +97,6 @@ abstract class AbstractRepository
         return $qb;
     }
 
-    final protected function attachFilters(
-        QueryBuilder $qb,
-        array $filters,
-        string $managerName = null
-    ): ?JoinCollection {
-        [$genericFilters, $customFilters] = $this->sortFilters($filters, $managerName);
-
-        if ($genericFilters) {
-            $this->attachGenericFilters($qb, $genericFilters);
-        }
-
-        $joinCollection = null;
-        if ($customFilters) {
-            $joinCollection = $this->attachCustomFilters($qb, $customFilters);
-        }
-
-        if (isset($joinCollection) && $joinCollection->getJoins()) {
-            $this->attachJoins($qb, $joinCollection);
-        }
-
-        return $joinCollection;
-    }
-
     final protected function sortFilters(array $filters, string $managerName = null): array
     {
         $genericFilters = $customFilters = [];
@@ -111,16 +111,6 @@ abstract class AbstractRepository
         }
 
         return [$genericFilters, $customFilters];
-    }
-
-    final protected function attachGenericFilters(QueryBuilder $qb, array $filters): void
-    {
-        foreach ($filters as $key => $value) {
-            $condition = \is_array($value) ? 'IN (:' . $key . ')' : '=:' . $key;
-
-            $qb->andWhere(static::getAlias() . '.' . $key . ' ' . $condition)
-                ->setParameter($key, $value);
-        }
     }
 
     final protected function attachJoins(
@@ -171,5 +161,15 @@ abstract class AbstractRepository
         throw new Exception(
             \sprintf('overwrite `%s` in `%s`', __METHOD__, static::class)
         );
+    }
+
+    private function attachGenericFilters(QueryBuilder $qb, array $filters): void
+    {
+        foreach ($filters as $key => $value) {
+            $condition = \is_array($value) ? 'IN (:' . $key . ')' : '=:' . $key;
+
+            $qb->andWhere(static::getAlias() . '.' . $key . ' ' . $condition)
+                ->setParameter($key, $value);
+        }
     }
 }
