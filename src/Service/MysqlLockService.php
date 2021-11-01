@@ -40,7 +40,7 @@ class MysqlLockService
         return 1 !== $row['lock_is_free'];
     }
 
-    public function acquire(string $lockName, int $ttl = 1, string $entityManagerName = null): self
+    public function acquire(string $lockName, int $timeout = 1, string $entityManagerName = null): self
     {
         /** @var EntityManager $em */
         $em = $this->managerRegistry->getManager($entityManagerName);
@@ -48,7 +48,11 @@ class MysqlLockService
         /** @var Connection $connection */
         $connection = $em->getConnection();
 
-        $sql = \sprintf('SELECT GET_LOCK(\'%s\', {$ttl}) AS lock_acquired', $this->getLockName($lockName, $entityManagerName));
+        $sql = \sprintf(
+            'SELECT GET_LOCK(\'%s\', %s) AS lock_acquired',
+            $this->getLockName($lockName, $entityManagerName),
+            $timeout
+        );
 
         try {
             $row = $connection->query($sql)->fetch(PDO::FETCH_ASSOC);
@@ -77,13 +81,13 @@ class MysqlLockService
         return $this;
     }
 
-    public function acquireLocks(array $lockNames, int $ttl = 0, string $entityManagerName = null): self
+    public function acquireLocks(array $lockNames, int $timeout = 0, string $entityManagerName = null): self
     {
         \asort($lockNames); /* sort the array to try and avoid deadlocks */
 
         try {
             foreach ($lockNames as $lockName) {
-                $this->acquire($lockName, $ttl, $entityManagerName);
+                $this->acquire($lockName, $timeout, $entityManagerName);
             }
         } catch (Exception $t) {
             $this->releaseLocks($lockNames, $entityManagerName);
