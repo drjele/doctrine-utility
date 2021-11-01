@@ -40,7 +40,7 @@ class MysqlLockService
         return 1 !== $row['lock_is_free'];
     }
 
-    public function acquire(string $lockName, int $timeout = 1, string $entityManagerName = null): self
+    public function acquire(string $lockName, int $timeout = 0, string $entityManagerName = null): self
     {
         /** @var EntityManager $em */
         $em = $this->managerRegistry->getManager($entityManagerName);
