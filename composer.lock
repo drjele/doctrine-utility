@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "10e7c528e684f4cf81154725abc3812f",
+    "content-hash": "c9c1c0af5bb56e7762af59400222fc28",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -2217,16 +2217,16 @@
         },
         {
             "name": "drjele/symfony-phpunit",
-            "version": "v2.0.5",
+            "version": "v2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://gitlab.com/drjele-symfony/phpunit.git",
-                "reference": "affdd9d3a799370501a920834941891b37cc7ce4"
+                "reference": "c6eb32bfdb8fb36996e278409f7bcb7ab64328b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/drjele-symfony%2Fphpunit/repository/archive.zip?sha=affdd9d3a799370501a920834941891b37cc7ce4",
-                "reference": "affdd9d3a799370501a920834941891b37cc7ce4",
+                "url": "https://gitlab.com/api/v4/projects/drjele-symfony%2Fphpunit/repository/archive.zip?sha=c6eb32bfdb8fb36996e278409f7bcb7ab64328b8",
+                "reference": "c6eb32bfdb8fb36996e278409f7bcb7ab64328b8",
                 "shasum": ""
             },
             "require": {
@@ -2276,7 +2276,7 @@
             "support": {
                 "issues": "https://gitlab.com/api/v4/projects/21712413/issues"
             },
-            "time": "2021-10-28T13:53:34+00:00"
+            "time": "2021-10-29T17:52:38+00:00"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
@@ -3350,7 +3350,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.4|^8.0"
+        "php": "^7.4|^8.0",
+        "ext-pdo": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.1.0"
