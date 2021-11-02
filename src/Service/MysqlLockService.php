@@ -11,7 +11,6 @@ namespace Drjele\Doctrine\Utility\Service;
 use Doctrine\DBAL\Driver\PDO\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
-use Drjele\Doctrine\Utility\Exception\Exception;
 use Drjele\Doctrine\Utility\Exception\MysqlLockException;
 use PDO;
 use Throwable;
@@ -19,63 +18,81 @@ use Throwable;
 class MysqlLockService
 {
     private ManagerRegistry $managerRegistry;
+    private array $locks;
 
     public function __construct(ManagerRegistry $managerRegistry)
     {
         $this->managerRegistry = $managerRegistry;
-    }
-
-    public function isLocked(string $lockName, string $entityManagerName = null): bool
-    {
-        /** @var EntityManager $em */
-        $em = $this->managerRegistry->getManager($entityManagerName);
-
-        /** @var Connection $connection */
-        $connection = $em->getConnection();
-
-        $sql = \sprintf('SELECT IS_FREE_LOCK(\'%s\') AS lock_is_free', $this->getLockName($lockName, $entityManagerName));
-
-        $row = $connection->query($sql)->fetch(PDO::FETCH_ASSOC);
-
-        return 1 !== $row['lock_is_free'];
+        $this->locks = [];
     }
 
     public function acquire(string $lockName, int $timeout = 0, string $entityManagerName = null): self
     {
-        /** @var EntityManager $em */
-        $em = $this->managerRegistry->getManager($entityManagerName);
-
-        /** @var Connection $connection */
-        $connection = $em->getConnection();
-
-        $sql = \sprintf(
-            'SELECT GET_LOCK(\'%s\', %s) AS lock_acquired',
-            $this->getLockName($lockName, $entityManagerName),
-            $timeout
-        );
-
         try {
+            /** @var EntityManager $em */
+            $em = $this->managerRegistry->getManager($entityManagerName);
+
+            /** @var Connection $connection */
+            $connection = $em->getConnection();
+
+            $preparedLockName = $this->getLockName($lockName, $entityManagerName);
+
+            $sql = \sprintf('SELECT GET_LOCK(%s, %s) AS lockAcquired', $preparedLockName, $timeout);
+
             $row = $connection->query($sql)->fetch(PDO::FETCH_ASSOC);
+
+            switch ($row['lockAcquired']) {
+                case 1:
+                    /* all ok */
+                    $this->locks[$lockName] = $preparedLockName;
+                    break;
+                case 0:
+                    throw new MysqlLockException('another operation with the same id is already in progress');
+                default:
+                    throw new MysqlLockException('an error occurred (such as running out of memory or the thread was killed)');
+            }
         } catch (Throwable $t) {
             throw new MysqlLockException(
-                \sprintf('failed acquiring lock `%s`: `%s`', $lockName, $t->getMessage()),
+                \sprintf('failed acquiring lock `%s`/`%s`: `%s`', $lockName, $preparedLockName ?? '~', $t->getMessage()),
                 $t->getCode(),
                 $t
             );
         }
 
-        switch ($row['lock_acquired']) {
-            case 1:
-                /* all ok */
-                break;
-            case 0:
-                throw new MysqlLockException(
-                    \sprintf('failed acquiring lock `%s`: another operation with the same id is already in progress', $lockName)
-                );
-            default:
-                throw new MysqlLockException(
-                    \sprintf('failed acquiring lock `%s`: an error occurred (such as running out of memory or the thread was killed with mysqladmin kill)', $lockName)
-                );
+        return $this;
+    }
+
+    public function release(string $lockName, string $entityManagerName = null): self
+    {
+        try {
+            /** @var EntityManager $em */
+            $em = $this->managerRegistry->getManager($entityManagerName);
+
+            /** @var Connection $connection */
+            $connection = $em->getConnection();
+
+            $preparedLockName = $this->getLockName($lockName, $entityManagerName);
+
+            $sql = \sprintf('SELECT RELEASE_LOCK(%s) AS lockReleased', $preparedLockName);
+
+            $row = $connection->query($sql)->fetch(PDO::FETCH_ASSOC);
+
+            switch ($row['lockReleased']) {
+                case 1:
+                    /* all ok */
+                    unset($this->locks[$lockName]);
+                    break;
+                case 0:
+                    throw new MysqlLockException('lock was not established by this thread');
+                default:
+                    throw new MysqlLockException('the named lock did not exist');
+            }
+        } catch (Throwable $t) {
+            throw new MysqlLockException(
+                \sprintf('failed releasing lock `%s`/`%s`: %s', $lockName, $preparedLockName ?? '~', $t->getMessage()),
+                $t->getCode(),
+                $t
+            );
         }
 
         return $this;
@@ -89,58 +106,44 @@ class MysqlLockService
             foreach ($lockNames as $lockName) {
                 $this->acquire($lockName, $timeout, $entityManagerName);
             }
-        } catch (Exception $t) {
+        } catch (Throwable $t) {
             $this->releaseLocks($lockNames, $entityManagerName);
 
-            throw $t;
+            throw new MysqlLockException($t->getMessage(), $t->getCode(), $t);
         }
 
         return $this;
     }
 
-    public function release(string $lockName, string $entityManagerName = null): self
+    public function isLocked(string $lockName, string $entityManagerName = null): bool
     {
-        /** @var EntityManager $em */
-        $em = $this->managerRegistry->getManager($entityManagerName);
+        try {
+            /** @var EntityManager $em */
+            $em = $this->managerRegistry->getManager($entityManagerName);
 
-        /** @var Connection $connection */
-        $connection = $em->getConnection();
+            /** @var Connection $connection */
+            $connection = $em->getConnection();
 
-        $sql = \sprintf('SELECT RELEASE_LOCK(\'%s\') AS lock_released', $this->getLockName($lockName));
+            $sql = \sprintf('SELECT IS_FREE_LOCK(%s) AS lockIsFree', $this->getLockName($lockName, $entityManagerName));
 
-        $row = $connection->query($sql)->fetch(PDO::FETCH_ASSOC);
+            $row = $connection->query($sql)->fetch(PDO::FETCH_ASSOC);
 
-        switch ($row['lock_released']) {
-            case 1:
-                /* all ok */
-                break;
-            case 0:
-                throw new MysqlLockException(
-                    \sprintf('failed releasing lock `%s`: lock was not established by this thread (in which case the lock is not released)', $lockName)
-                );
-            default:
-                throw new MysqlLockException(
-                    \sprintf('failed releasing lock `%s`: the named lock did not exist', $lockName)
-                );
+            return 1 !== (int)$row['lockIsFree'];
+        } catch (Throwable $t) {
+            throw new MysqlLockException($t->getMessage(), $t->getCode(), $t);
         }
-
-        return $this;
     }
 
-    public function releaseLocks(array $lockNames, string $entityManagerName = null, bool $throwException = false): self
+    public function releaseLocks(array $lockNames = null, string $entityManagerName = null, bool $throw = false): self
     {
-        $exception = null;
-
-        foreach ($lockNames as $lockName) {
+        foreach (($lockNames ?? \array_keys($this->locks)) as $lockName) {
             try {
                 $this->release($lockName, $entityManagerName);
             } catch (Throwable $t) {
-                $exception = $t;
+                if (true === $throw) {
+                    throw new MysqlLockException($t->getMessage(), $t->getCode(), $t);
+                }
             }
-        }
-
-        if (true === $throwException && $exception) {
-            throw $exception;
         }
 
         return $this;
