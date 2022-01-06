@@ -24,7 +24,7 @@ abstract class AbstractRepository
 
     private ManagerRegistry $managerRegistry;
 
-    abstract public function getEntityClass(): string;
+    abstract protected function getEntityClass(): string;
 
     public static function getAlias(): string
     {
