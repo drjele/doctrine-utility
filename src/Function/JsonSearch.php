@@ -6,24 +6,19 @@ declare(strict_types=1);
  * Copyright (c) Adrian Jeledintan
  */
 
-namespace Drjele\Doctrine\Utility\Query;
+namespace Drjele\Doctrine\Utility\Function;
 
 use Doctrine\DBAL\Platforms\MySqlPlatform;
-use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\AST\Node;
 use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
 use Drjele\Doctrine\Utility\Exception\Exception;
 
-class JsonSearch extends FunctionNode
+class JsonSearch extends AbstractJsonSearch
 {
     public const FUNCTION_NAME = 'JSON_SEARCH';
 
-    public const MODE_ONE = 'one';
-    public const MODE_ALL = 'all';
-
-    public string $mode;
     public Node $jsonDocExpr;
     public Node $jsonSearchExpr;
     public Node $jsonEscapeExpr;
@@ -80,29 +75,5 @@ class JsonSearch extends FunctionNode
         }
 
         $parser->match(Lexer::T_CLOSE_PARENTHESIS);
-    }
-
-    protected function parsePathMode(Parser $parser): void
-    {
-        $lexer = $parser->getLexer();
-        $value = $lexer->lookahead['value'];
-
-        if (0 === \strcasecmp(self::MODE_ONE, $value)) {
-            $this->mode = self::MODE_ONE;
-            $parser->StringPrimary();
-
-            return;
-        }
-
-        if (0 === \strcasecmp(self::MODE_ALL, $value)) {
-            $this->mode = self::MODE_ALL;
-            $parser->StringPrimary();
-
-            return;
-        }
-
-        throw new Exception(
-            \sprintf('mode `%s` is not supported by `%s`', $value, static::FUNCTION_NAME)
-        );
     }
 }

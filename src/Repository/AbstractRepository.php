@@ -24,7 +24,7 @@ abstract class AbstractRepository
 
     private ManagerRegistry $managerRegistry;
 
-    abstract public static function getEntityClass(): string;
+    abstract public function getEntityClass(): string;
 
     public static function getAlias(): string
     {
@@ -39,45 +39,47 @@ abstract class AbstractRepository
     }
 
     final public function attachFilters(
-        QueryBuilder $qb,
+        QueryBuilder $queryBuilder,
         array $filters,
         string $managerName = null
     ): ?JoinCollection {
         [$genericFilters, $customFilters] = $this->sortFilters($filters, $managerName);
 
         if ($genericFilters) {
-            $this->attachGenericFilters($qb, $genericFilters);
+            $this->attachGenericFilters($queryBuilder, $genericFilters);
         }
 
         $joinCollection = null;
         if ($customFilters) {
-            $joinCollection = $this->attachCustomFilters($qb, $customFilters);
+            $joinCollection = $this->attachCustomFilters($queryBuilder, $customFilters);
         }
 
         if (isset($joinCollection) && $joinCollection->getJoins()) {
-            $this->attachJoins($qb, $joinCollection);
+            $this->attachJoins($queryBuilder, $joinCollection);
         }
 
         return $joinCollection;
     }
 
-    final protected function execute(string $query, array $parameters = [], string $connectionName = null): Result
-    {
-        /** @var Connection $connection */
-        $connection = $this->managerRegistry->getConnection($connectionName);
-
-        $stmt = $connection->prepare($query);
+    final protected function execute(
+        string $query,
+        array $parameters = [],
+        string $connectionName = null
+    ): Result {
+        $stmt = $this->getConnection($connectionName)->prepare($query);
 
         return $stmt->executeQuery($parameters);
     }
 
-    final protected function getManagerRegistry(): ?ManagerRegistry
-    {
-        return $this->managerRegistry;
+    final protected function getConnection(
+        string $connectionName = null
+    ): Connection {
+        return $this->managerRegistry->getConnection($connectionName);
     }
 
-    final protected function createQueryBuilder(string $managerName = null): QueryBuilder
-    {
+    final protected function createQueryBuilder(
+        string $managerName = null
+    ): QueryBuilder {
         return $this->getDoctrineRepository($managerName)->createQueryBuilder(static::getAlias());
     }
 
@@ -86,23 +88,27 @@ abstract class AbstractRepository
         bool $selectJoins = false,
         string $managerName = null
     ): QueryBuilder {
-        $qb = $this->createQueryBuilder($managerName);
+        $queryBuilder = $this->createQueryBuilder($managerName);
 
-        $joinCollection = $this->attachFilters($qb, $filters, $managerName);
+        $joinCollection = $this->attachFilters($queryBuilder, $filters, $managerName);
 
         if (true === $selectJoins && null !== $joinCollection) {
-            $qb->addSelect($joinCollection->getAliases());
+            $queryBuilder->addSelect($joinCollection->getAliases());
         }
 
-        return $qb;
+        return $queryBuilder;
     }
 
-    final protected function sortFilters(array $filters, string $managerName = null): array
-    {
+    final protected function sortFilters(
+        array $filters,
+        string $managerName = null
+    ): array {
         $genericFilters = $customFilters = [];
 
+        $doctrineRepository = $this->getDoctrineRepository($managerName);
+
         foreach ($filters as $filter => $value) {
-            if ($this->getDoctrineRepository($managerName)->hasField($filter)) {
+            if ($doctrineRepository->hasField($filter)) {
                 $genericFilters[$filter] = $value;
                 continue;
             }
@@ -114,13 +120,13 @@ abstract class AbstractRepository
     }
 
     final protected function attachJoins(
-        QueryBuilder $qb,
+        QueryBuilder $queryBuilder,
         JoinCollection $joinCollection
     ): void {
         foreach ($joinCollection->getJoins() as $join) {
             switch ($join->getJoinType()) {
                 case static::JOIN_INNER:
-                    $qb->innerJoin(
+                    $queryBuilder->innerJoin(
                         $join->getJoin(),
                         $join->getAlias(),
                         $join->getConditionType(),
@@ -129,7 +135,7 @@ abstract class AbstractRepository
                     );
                     break;
                 case static::JOIN_LEFT:
-                    $qb->leftJoin(
+                    $queryBuilder->leftJoin(
                         $join->getJoin(),
                         $join->getAlias(),
                         $join->getConditionType(),
@@ -143,11 +149,22 @@ abstract class AbstractRepository
         }
     }
 
-    final protected function getDoctrineRepository(string $managerName = null): DoctrineRepository
-    {
+    final protected function getDoctrineRepository(
+        string $managerName = null
+    ): DoctrineRepository {
         $managerName ??= $this->getManagerName();
 
-        return $this->managerRegistry->getRepository(static::getEntityClass(), $managerName);
+        $repository = $this->managerRegistry->getRepository($this->getEntityClass(), $managerName);
+
+        if (($repository instanceof DoctrineRepository) === false) {
+            throw new Exception(
+                'if you are using `%s` you must use `%s` for the entity repository',
+                self::class,
+                DoctrineRepository::class
+            );
+        }
+
+        return $repository;
     }
 
     protected function getManagerName(): ?string
@@ -156,19 +173,23 @@ abstract class AbstractRepository
         return null;
     }
 
-    protected function attachCustomFilters(QueryBuilder $qb, array $filters): JoinCollection
-    {
+    protected function attachCustomFilters(
+        QueryBuilder $queryBuilder,
+        array $filters
+    ): JoinCollection {
         throw new Exception(
             \sprintf('overwrite `%s` in `%s`', __METHOD__, static::class)
         );
     }
 
-    private function attachGenericFilters(QueryBuilder $qb, array $filters): void
-    {
+    private function attachGenericFilters(
+        QueryBuilder $queryBuilder,
+        array $filters
+    ): void {
         foreach ($filters as $key => $value) {
-            $condition = \is_array($value) ? 'IN (:' . $key . ')' : '=:' . $key;
+            $condition = \is_array($value) ? "IN (:{$key})" : "= :{$key}";
 
-            $qb->andWhere(static::getAlias() . '.' . $key . ' ' . $condition)
+            $queryBuilder->andWhere(static::getAlias() . ".{$key} {$condition}")
                 ->setParameter($key, $value);
         }
     }

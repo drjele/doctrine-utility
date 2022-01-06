@@ -39,7 +39,7 @@ class MysqlLockService
             /** @var Connection $connection */
             $connection = $em->getConnection();
 
-            $preparedLockName = $this->getLockName($lockName, $entityManagerName);
+            $preparedLockName = $this->prepareLockName($lockName, $entityManagerName);
 
             $sql = \sprintf('SELECT GET_LOCK(%s, %s) AS lockAcquired', $preparedLockName, $timeout);
 
@@ -78,7 +78,7 @@ class MysqlLockService
             /** @var Connection $connection */
             $connection = $em->getConnection();
 
-            $preparedLockName = $this->getLockName($lockName, $entityManagerName);
+            $preparedLockName = $this->prepareLockName($lockName, $entityManagerName);
 
             $sql = \sprintf('SELECT RELEASE_LOCK(%s) AS lockReleased', $preparedLockName);
 
@@ -138,7 +138,7 @@ class MysqlLockService
             /** @var Connection $connection */
             $connection = $em->getConnection();
 
-            $sql = \sprintf('SELECT IS_FREE_LOCK(%s) AS lockIsFree', $this->getLockName($lockName, $entityManagerName));
+            $sql = \sprintf('SELECT IS_FREE_LOCK(%s) AS lockIsFree', $this->prepareLockName($lockName, $entityManagerName));
 
             $row = $connection->query($sql)->fetch(PDO::FETCH_ASSOC);
 
@@ -166,7 +166,7 @@ class MysqlLockService
         return $this;
     }
 
-    private function getLockName(
+    private function prepareLockName(
         string $lockName,
         string $entityManagerName = null
     ): string {
@@ -174,11 +174,11 @@ class MysqlLockService
             $lockName = \substr($lockName, 0, 10) . '>>' . \md5($lockName) . '<<' . \substr($lockName, -10);
         }
 
-        /** @var EntityManager $em */
-        $em = $this->managerRegistry->getManager($entityManagerName);
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->managerRegistry->getManager($entityManagerName);
 
         /** @var Connection $connection */
-        $connection = $em->getConnection();
+        $connection = $entityManager->getConnection();
 
         return $connection->quote($lockName);
     }

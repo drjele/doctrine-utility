@@ -83,13 +83,13 @@ final class AbstractRepositoryTest extends AbstractTestCase
 
         $managerRegistry = Mockery::mock(ManagerRegistry::class);
         $managerRegistry->shouldReceive('getRepository')
-            ->times(4)
+            ->times(2)
             ->andReturn($doctrineRepository);
 
         $mock->setManagerRegistry($managerRegistry);
 
         $mock->shouldReceive('getEntityClass')
-            ->times(4)
+            ->times(2)
             ->andReturn('test');
 
         $mock->shouldReceive('attachCustomFilters')

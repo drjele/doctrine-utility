@@ -11,8 +11,7 @@ RUN apk add --update \
 
 RUN rm -rf /var/cache/apk/* && rm -rf /tmp/*
 
-# the dockerfile is copied as a hack because docker does not have conditional copy and the file might not exist
-COPY Dockerfile id_* /root/.ssh/
+COPY id_* /root/.ssh/
 RUN chmod 600 /root/.ssh/id_*
 COPY .profile* /root/
 

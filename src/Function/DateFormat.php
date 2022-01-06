@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Copyright (c) Adrian Jeledintan
  */
 
-namespace Drjele\Doctrine\Utility\Query;
+namespace Drjele\Doctrine\Utility\Function;
 
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\AST\Node;
@@ -16,6 +16,8 @@ use Doctrine\ORM\Query\SqlWalker;
 
 class DateFormat extends FunctionNode
 {
+    public const FUNCTION_NAME = 'DATE_FORMAT';
+
     public Node $firstDateExpression;
     public Node $secondDateExpression;
 
@@ -32,7 +34,8 @@ class DateFormat extends FunctionNode
     public function getSql(SqlWalker $sqlWalker): string
     {
         return \sprintf(
-            'DATE_FORMAT(%s, %s)',
+            '%s(%s, %s)',
+            static::FUNCTION_NAME,
             $this->firstDateExpression->dispatch($sqlWalker),
             $this->secondDateExpression->dispatch($sqlWalker)
         );

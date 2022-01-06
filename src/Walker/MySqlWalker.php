@@ -49,7 +49,7 @@ class MySqlWalker extends SqlWalker
     {
         $result = parent::walkWhereClause($whereClause);
 
-        if ($index = $this->getQuery()->getHint(self::HINT_SELECT_FOR_UPDATE)) {
+        if ($this->getQuery()->getHint(self::HINT_SELECT_FOR_UPDATE)) {
             $result .= ' FOR UPDATE';
         }
 
@@ -59,9 +59,9 @@ class MySqlWalker extends SqlWalker
     public function walkJoinAssociationDeclaration(
         $joinAssociationDeclaration,
         $joinType = Join::JOIN_TYPE_INNER,
-        $condition = null
+        $condExpr = null
     ): string {
-        $result = parent::walkJoinAssociationDeclaration($joinAssociationDeclaration, $joinType, $condition);
+        $result = parent::walkJoinAssociationDeclaration($joinAssociationDeclaration, $joinType, $condExpr);
 
         if ($ignoreIndex = $this->getQuery()->getHint(static::HINT_IGNORE_INDEX_ON_JOIN)) {
             [$index, $table] = $ignoreIndex;
