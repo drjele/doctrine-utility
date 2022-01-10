@@ -122,4 +122,4 @@ class ProductRepository extends AbstractRepository
 
 ## Todo
 
-* Unit tests
+* Unit tests.
