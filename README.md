@@ -123,3 +123,18 @@ class ProductRepository extends AbstractRepository
 ## Todo
 
 * Unit tests.
+
+## Dev
+
+```shell
+git clone git@gitlab.com:drjele-doctrine/utility.git
+cd utility/scripts/docker/
+cp ~/.ssh/id_* ./
+
+echo 'git config --global user.name "<your name>"' >> ./.profile_personal && \
+echo 'git config --global user.email "<your email>"' >> ./.profile_personal
+
+docker-compose build && docker-compose up -d
+docker-compose exec php sh
+composer install
+```

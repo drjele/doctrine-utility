@@ -30,10 +30,10 @@ class JsonSearch extends AbstractJsonSearch
         $mode = $sqlWalker->walkStringPrimary($this->mode);
         $searchArgs = $sqlWalker->walkStringPrimary($this->jsonSearchExpr);
 
-        if (!empty($this->jsonEscapeExpr)) {
+        if (false === empty($this->jsonEscapeExpr)) {
             $searchArgs .= ', ' . $sqlWalker->walkStringPrimary($this->jsonEscapeExpr);
 
-            if (!empty($this->jsonPaths)) {
+            if (false === empty($this->jsonPaths)) {
                 $jsonPaths = [];
                 foreach ($this->jsonPaths as $path) {
                     $jsonPaths[] = $sqlWalker->walkStringPrimary($path);
@@ -42,7 +42,7 @@ class JsonSearch extends AbstractJsonSearch
             }
         }
 
-        if ($sqlWalker->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
+        if (($sqlWalker->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) === true) {
             return \sprintf('%s(%s, %s, %s)', static::FUNCTION_NAME, $jsonDoc, $mode, $searchArgs);
         }
 
@@ -64,11 +64,11 @@ class JsonSearch extends AbstractJsonSearch
 
         $this->jsonSearchExpr = $parser->StringPrimary();
 
-        if ($parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
+        if (true === $parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
             $parser->match(Lexer::T_COMMA);
             $this->jsonEscapeExpr = $parser->StringPrimary();
 
-            while ($parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
+            while (true === $parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
                 $parser->match(Lexer::T_COMMA);
                 $this->jsonPaths[] = $parser->StringPrimary();
             }

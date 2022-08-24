@@ -25,7 +25,7 @@ class JoinCollection
     {
         $alias = $join->getAlias();
 
-        if (isset($this->joins[$alias])) {
+        if (true === isset($this->joins[$alias])) {
             throw new Exception(
                 \sprintf('duplicate alias `%s` in join collection', $alias)
             );

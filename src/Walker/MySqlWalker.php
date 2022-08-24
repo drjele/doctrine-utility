@@ -30,15 +30,15 @@ class MySqlWalker extends SqlWalker
 
         $result = parent::walkFromClause($fromClause);
 
-        if ($index = $this->getQuery()->getHint(self::HINT_USE_INDEX)) {
+        if (false === empty($index = $this->getQuery()->getHint(self::HINT_USE_INDEX))) {
             $result = \preg_replace($regex, '\1 USE INDEX (' . $index . ')', $result);
         }
 
-        if ($index = $this->getQuery()->getHint(self::HINT_IGNORE_INDEX)) {
+        if (false === empty($index = $this->getQuery()->getHint(self::HINT_IGNORE_INDEX))) {
             $result = \preg_replace($regex, '\1 IGNORE INDEX (' . $index . ')', $result);
         }
 
-        if ($index = $this->getQuery()->getHint(self::HINT_FORCE_INDEX)) {
+        if (false === empty($index = $this->getQuery()->getHint(self::HINT_FORCE_INDEX))) {
             $result = \preg_replace($regex, '\1 FORCE INDEX (' . $index . ')', $result);
         }
 
@@ -49,7 +49,7 @@ class MySqlWalker extends SqlWalker
     {
         $result = parent::walkWhereClause($whereClause);
 
-        if ($this->getQuery()->getHint(self::HINT_SELECT_FOR_UPDATE)) {
+        if (false === empty($this->getQuery()->getHint(self::HINT_SELECT_FOR_UPDATE))) {
             $result .= ' FOR UPDATE';
         }
 
@@ -63,13 +63,13 @@ class MySqlWalker extends SqlWalker
     ): string {
         $result = parent::walkJoinAssociationDeclaration($joinAssociationDeclaration, $joinType, $condExpr);
 
-        if ($ignoreIndex = $this->getQuery()->getHint(static::HINT_IGNORE_INDEX_ON_JOIN)) {
+        if (false === empty($ignoreIndex = $this->getQuery()->getHint(static::HINT_IGNORE_INDEX_ON_JOIN))) {
             [$index, $table] = $ignoreIndex;
-            if (2 !== \count($ignoreIndex) || empty($table)) {
+            if (2 !== \count($ignoreIndex) || true === empty($table)) {
                 throw new Exception('ignore index on join hint with invalid parameters');
             }
 
-            if (\preg_match('/`' . $table . '`/', $result)) {
+            if (false === empty(\preg_match('/`' . $table . '`/', $result))) {
                 $result = \preg_replace('/ON/', 'IGNORE INDEX (' . $index . ') ON', $result);
             }
         }

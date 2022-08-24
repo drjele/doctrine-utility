@@ -45,16 +45,16 @@ abstract class AbstractRepository
     ): ?JoinCollection {
         [$genericFilters, $customFilters] = $this->sortFilters($filters, $managerName);
 
-        if ($genericFilters) {
+        if (\count($genericFilters) > 0) {
             $this->attachGenericFilters($queryBuilder, $genericFilters);
         }
 
         $joinCollection = null;
-        if ($customFilters) {
+        if (\count($customFilters) > 0) {
             $joinCollection = $this->attachCustomFilters($queryBuilder, $customFilters);
         }
 
-        if (isset($joinCollection) && $joinCollection->getJoins()) {
+        if (true === isset($joinCollection) && \count($joinCollection->getJoins()) > 0) {
             $this->attachJoins($queryBuilder, $joinCollection);
         }
 
@@ -108,7 +108,7 @@ abstract class AbstractRepository
         $doctrineRepository = $this->getDoctrineRepository($managerName);
 
         foreach ($filters as $filter => $value) {
-            if ($doctrineRepository->hasField($filter)) {
+            if (true === $doctrineRepository->hasField($filter)) {
                 $genericFilters[$filter] = $value;
                 continue;
             }
@@ -158,9 +158,11 @@ abstract class AbstractRepository
 
         if (($repository instanceof DoctrineRepository) === false) {
             throw new Exception(
-                'if you are using `%s` you must use `%s` for the entity repository',
-                self::class,
-                DoctrineRepository::class
+                \sprintf(
+                    'if you are using `%s` you must use `%s` for the entity repository',
+                    self::class,
+                    DoctrineRepository::class
+                )
             );
         }
 

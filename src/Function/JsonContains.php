@@ -30,11 +30,11 @@ class JsonContains extends FunctionNode
         $jsonVal = $sqlWalker->walkStringPrimary($this->jsonValExpr);
 
         $jsonPath = '';
-        if (!empty($this->jsonPathExpr)) {
+        if (false === empty($this->jsonPathExpr)) {
             $jsonPath = ', ' . $sqlWalker->walkStringPrimary($this->jsonPathExpr);
         }
 
-        if ($sqlWalker->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
+        if (($sqlWalker->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) === true) {
             return \sprintf('%s(%s, %s)', static::FUNCTION_NAME, $jsonDoc, $jsonVal . $jsonPath);
         }
 
@@ -52,7 +52,7 @@ class JsonContains extends FunctionNode
 
         $this->jsonValExpr = $parser->StringPrimary();
 
-        if ($parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
+        if (true === $parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
             $parser->match(Lexer::T_COMMA);
             $this->jsonPathExpr = $parser->StringPrimary();
         }

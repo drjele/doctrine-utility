@@ -11,6 +11,7 @@ git config --global color.diff auto
 git config --global color.interactive auto
 git config --global color.status auto
 git config --global push.default current
+git config --global --add safe.directory /var/www/app
 
 alias own="chown -R www-data $@"
 alias ll="ls -al"

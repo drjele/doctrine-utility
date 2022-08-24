@@ -12,7 +12,6 @@ use Doctrine\DBAL\Driver\PDO\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Drjele\Doctrine\Utility\Exception\MysqlLockException;
-use PDO;
 use Throwable;
 
 class MysqlLockService
@@ -43,7 +42,7 @@ class MysqlLockService
 
             $sql = \sprintf('SELECT GET_LOCK(%s, %s) AS lockAcquired', $preparedLockName, $timeout);
 
-            $row = $connection->query($sql)->fetch(PDO::FETCH_ASSOC);
+            $row = $connection->query($sql)->fetchAssociative();
 
             switch ($row['lockAcquired']) {
                 case 1:
@@ -82,7 +81,7 @@ class MysqlLockService
 
             $sql = \sprintf('SELECT RELEASE_LOCK(%s) AS lockReleased', $preparedLockName);
 
-            $row = $connection->query($sql)->fetch(PDO::FETCH_ASSOC);
+            $row = $connection->query($sql)->fetchAssociative();
 
             switch ($row['lockReleased']) {
                 case 1:
@@ -140,7 +139,7 @@ class MysqlLockService
 
             $sql = \sprintf('SELECT IS_FREE_LOCK(%s) AS lockIsFree', $this->prepareLockName($lockName, $entityManagerName));
 
-            $row = $connection->query($sql)->fetch(PDO::FETCH_ASSOC);
+            $row = $connection->query($sql)->fetchAssociative();
 
             return 1 !== (int)$row['lockIsFree'];
         } catch (Throwable $t) {

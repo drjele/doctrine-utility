@@ -33,7 +33,7 @@ class JsonContainsPath extends AbstractJsonSearch
             $paths[] = $sqlWalker->walkStringPrimary($path);
         }
 
-        if ($sqlWalker->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
+        if (($sqlWalker->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) === true) {
             return \sprintf('%s(%s, %s, %s)', static::FUNCTION_NAME, $jsonDoc, $mode, \implode(', ', $paths));
         }
 
@@ -56,7 +56,7 @@ class JsonContainsPath extends AbstractJsonSearch
         $this->firstJsonPathExpr = $parser->StringPrimary();
         $this->jsonPaths[] = $this->firstJsonPathExpr;
 
-        while ($parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
+        while (true === $parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
             $parser->match(Lexer::T_COMMA);
             $this->jsonPaths[] = $parser->StringPrimary();
         }

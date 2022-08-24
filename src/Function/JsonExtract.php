@@ -33,7 +33,7 @@ class JsonExtract extends FunctionNode
             $paths[] = $sqlWalker->walkStringPrimary($path);
         }
 
-        if ($sqlWalker->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) {
+        if (($sqlWalker->getConnection()->getDatabasePlatform() instanceof MySqlPlatform) === true) {
             return \sprintf('%s(%s, %s)', static::FUNCTION_NAME, $jsonDoc, \implode(', ', $paths));
         }
 
@@ -52,7 +52,7 @@ class JsonExtract extends FunctionNode
         $this->firstJsonPathExpr = $parser->StringPrimary();
         $this->jsonPaths[] = $this->firstJsonPathExpr;
 
-        while ($parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
+        while (true === $parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
             $parser->match(Lexer::T_COMMA);
             $this->jsonPaths[] = $parser->StringPrimary();
         }
