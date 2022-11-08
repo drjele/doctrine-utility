@@ -4,7 +4,7 @@ $header = 'Copyright (c) Adrian Jeledintan';
 
 $finder = (new PhpCsFixer\Finder())
     ->in(__DIR__)
-    ->exclude(['assets', 'node_modules', 'var', 'vendor']);
+    ->exclude(['var', 'vendor']);
 
 return (new PhpCsFixer\Config())
     ->setRules(
