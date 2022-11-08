@@ -24,7 +24,7 @@ class MySqlWalker extends SqlWalker
     public const HINT_SELECT_FOR_UPDATE = 'MySqlWalker.SelectForUpdate';
     public const HINT_IGNORE_INDEX_ON_JOIN = 'MySqlWalker.IgnoreIndexOnJoin';
 
-    public function walkFromClause($fromClause): string
+    public function walkFromClause(mixed $fromClause): string
     {
         $regex = '/(\s+FROM\s+[`\w\.]+\s+\w*)/';
 
@@ -45,7 +45,7 @@ class MySqlWalker extends SqlWalker
         return $result;
     }
 
-    public function walkWhereClause($whereClause): string
+    public function walkWhereClause(mixed $whereClause): string
     {
         $result = parent::walkWhereClause($whereClause);
 
@@ -57,9 +57,9 @@ class MySqlWalker extends SqlWalker
     }
 
     public function walkJoinAssociationDeclaration(
-        $joinAssociationDeclaration,
-        $joinType = Join::JOIN_TYPE_INNER,
-        $condExpr = null
+        mixed $joinAssociationDeclaration,
+        mixed $joinType = Join::JOIN_TYPE_INNER,
+        mixed $condExpr = null
     ): string {
         $result = parent::walkJoinAssociationDeclaration($joinAssociationDeclaration, $joinType, $condExpr);
 
