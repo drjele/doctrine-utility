@@ -4,9 +4,6 @@
     "description": "Doctrine utility library",
     "keywords": [
         "doctrine",
-        "symfony",
-        "type",
-        "query",
         "repository"
     ],
     "homepage": "https://gitlab.com/drjele/doctrine-utility",
