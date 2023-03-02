@@ -15,12 +15,12 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": ">=8.2",
         "ext-pdo": "*",
         "doctrine/orm": "^2.13"
     },
     "require-dev": {
-        "drjele/symfony-phpunit": "^4.0",
+        "drjele/symfony-phpunit": "^5.0",
         "friendsofphp/php-cs-fixer": "^3.13",
         "phpstan/phpstan": "^1.9",
         "squizlabs/php_codesniffer": "^3.7"
@@ -37,7 +37,7 @@
     },
     "scripts": {
         "install-hooks": [
-            "[ $COMPOSER_DEV_MODE -eq 1 ] && rm -rf .git/hooks && ln -s ../scripts/git_hooks .git/hooks || exit 0"
+            "[ $COMPOSER_DEV_MODE -eq 1 ] && rm -rf .git/hooks && ln -s ../dev/git-hooks .git/hooks || exit 0"
         ],
         "post-install-cmd": [
             "@install-hooks"
