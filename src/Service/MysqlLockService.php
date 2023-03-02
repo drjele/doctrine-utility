@@ -26,11 +26,39 @@ class MysqlLockService
         $this->locks = [];
     }
 
+    public function isLocked(
+        string $lockName,
+        string $entityManagerName = null
+    ): bool {
+        try {
+            /** @var EntityManager $em */
+            $em = $this->managerRegistry->getManager($entityManagerName);
+
+            /** @var Connection $connection */
+            $connection = $em->getConnection();
+
+            $sql = \sprintf('SELECT IS_FREE_LOCK(%s) AS lockIsFree', $this->prepareLockName($lockName, $entityManagerName));
+
+            $row = $connection->query($sql)->fetchAssociative();
+
+            return 1 !== (int)$row['lockIsFree'];
+        } catch (Throwable $t) {
+            throw new MysqlLockException($t->getMessage(), $t->getCode(), $t);
+        }
+    }
+
     public function acquire(
         string $lockName,
         int $timeout = 0,
-        string $entityManagerName = null
+        string $entityManagerName = null,
+        bool $forceRefresh = false
     ): self {
+        if (false === $forceRefresh && true === isset($this->locks[$lockName])) {
+            ++$this->locks[$lockName]['count'];
+
+            return $this;
+        }
+
         try {
             /** @var EntityManager $em */
             $em = $this->managerRegistry->getManager($entityManagerName);
@@ -44,10 +72,17 @@ class MysqlLockService
 
             $row = $connection->query($sql)->fetchAssociative();
 
-            switch ($row['lockAcquired']) {
+            switch ((int)$row['lockAcquired']) {
                 case 1:
                     /* all ok */
-                    $this->locks[$lockName] = $preparedLockName;
+                    if (false === isset($this->locks[$lockName])) {
+                        $this->locks[$lockName] = [
+                            'preparedLockName' => $preparedLockName,
+                            'count' => 0,
+                        ];
+                    }
+
+                    ++$this->locks[$lockName]['count'];
                     break;
                 case 0:
                     throw new MysqlLockException('another operation with the same id is already in progress');
@@ -70,6 +105,18 @@ class MysqlLockService
         string $entityManagerName = null,
         bool $throwException = false
     ): self {
+        if (false === isset($this->locks[$lockName])) {
+            throw new MysqlLockException(
+                \sprintf('the lock "%s" is not currently acquired', $lockName)
+            );
+        }
+
+        --$this->locks[$lockName]['count'];
+
+        if ($this->locks[$lockName]['count'] > 0) {
+            return $this;
+        }
+
         try {
             /** @var EntityManager $em */
             $em = $this->managerRegistry->getManager($entityManagerName);
@@ -77,13 +124,13 @@ class MysqlLockService
             /** @var Connection $connection */
             $connection = $em->getConnection();
 
-            $preparedLockName = $this->prepareLockName($lockName, $entityManagerName);
+            $preparedLockName = $this->locks[$lockName]['preparedLockName'];
 
             $sql = \sprintf('SELECT RELEASE_LOCK(%s) AS lockReleased', $preparedLockName);
 
             $row = $connection->query($sql)->fetchAssociative();
 
-            switch ($row['lockReleased']) {
+            switch ((int)$row['lockReleased']) {
                 case 1:
                     /* all ok */
                     unset($this->locks[$lockName]);
@@ -124,27 +171,6 @@ class MysqlLockService
         }
 
         return $this;
-    }
-
-    public function isLocked(
-        string $lockName,
-        string $entityManagerName = null
-    ): bool {
-        try {
-            /** @var EntityManager $em */
-            $em = $this->managerRegistry->getManager($entityManagerName);
-
-            /** @var Connection $connection */
-            $connection = $em->getConnection();
-
-            $sql = \sprintf('SELECT IS_FREE_LOCK(%s) AS lockIsFree', $this->prepareLockName($lockName, $entityManagerName));
-
-            $row = $connection->query($sql)->fetchAssociative();
-
-            return 1 !== (int)$row['lockIsFree'];
-        } catch (Throwable $t) {
-            throw new MysqlLockException($t->getMessage(), $t->getCode(), $t);
-        }
     }
 
     public function releaseLocks(
