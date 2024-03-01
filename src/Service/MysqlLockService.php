@@ -41,7 +41,7 @@ class MysqlLockService
 
             $row = $connection->query($sql)->fetchAssociative();
 
-            return 1 !== (int)$row['lockIsFree'];
+            return 1 !== (int) $row['lockIsFree'];
         } catch (Throwable $t) {
             throw new MysqlLockException($t->getMessage(), $t->getCode(), $t);
         }
@@ -72,7 +72,7 @@ class MysqlLockService
 
             $row = $connection->query($sql)->fetchAssociative();
 
-            switch ((int)$row['lockAcquired']) {
+            switch ((int) $row['lockAcquired']) {
                 case 1:
                     /* all ok */
                     if (false === isset($this->locks[$lockName])) {
@@ -130,7 +130,7 @@ class MysqlLockService
 
             $row = $connection->query($sql)->fetchAssociative();
 
-            switch ((int)$row['lockReleased']) {
+            switch ((int) $row['lockReleased']) {
                 case 1:
                     /* all ok */
                     unset($this->locks[$lockName]);
