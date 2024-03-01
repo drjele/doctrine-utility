@@ -17,7 +17,7 @@
     "require": {
         "php": ">=8.2",
         "ext-pdo": "*",
-        "doctrine/orm": "2.*|3.0"
+        "doctrine/orm": "2.*|3.*"
     },
     "require-dev": {
         "drjele/symfony-phpunit": "5.*",
