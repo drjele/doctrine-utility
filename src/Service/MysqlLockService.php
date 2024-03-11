@@ -34,12 +34,11 @@ class MysqlLockService
             /** @var EntityManager $em */
             $em = $this->managerRegistry->getManager($entityManagerName);
 
-            /** @var Connection $connection */
             $connection = $em->getConnection();
 
             $sql = \sprintf('SELECT IS_FREE_LOCK(%s) AS lockIsFree', $this->prepareLockName($lockName, $entityManagerName));
 
-            $row = $connection->query($sql)->fetchAssociative();
+            $row = $connection->executeQuery($sql)->fetchAssociative();
 
             return 1 !== (int) $row['lockIsFree'];
         } catch (Throwable $t) {
@@ -63,14 +62,13 @@ class MysqlLockService
             /** @var EntityManager $em */
             $em = $this->managerRegistry->getManager($entityManagerName);
 
-            /** @var Connection $connection */
             $connection = $em->getConnection();
 
             $preparedLockName = $this->prepareLockName($lockName, $entityManagerName);
 
             $sql = \sprintf('SELECT GET_LOCK(%s, %s) AS lockAcquired', $preparedLockName, $timeout);
 
-            $row = $connection->query($sql)->fetchAssociative();
+            $row = $connection->executeQuery($sql)->fetchAssociative();
 
             switch ((int) $row['lockAcquired']) {
                 case 1:
@@ -121,14 +119,13 @@ class MysqlLockService
             /** @var EntityManager $em */
             $em = $this->managerRegistry->getManager($entityManagerName);
 
-            /** @var Connection $connection */
             $connection = $em->getConnection();
 
             $preparedLockName = $this->locks[$lockName]['preparedLockName'];
 
             $sql = \sprintf('SELECT RELEASE_LOCK(%s) AS lockReleased', $preparedLockName);
 
-            $row = $connection->query($sql)->fetchAssociative();
+            $row = $connection->executeQuery($sql)->fetchAssociative();
 
             switch ((int) $row['lockReleased']) {
                 case 1:
