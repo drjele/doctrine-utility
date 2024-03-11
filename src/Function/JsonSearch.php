@@ -10,9 +10,9 @@ namespace Drjele\Doctrine\Utility\Function;
 
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\ORM\Query\AST\Node;
-use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
+use Doctrine\ORM\Query\TokenType;
 use Drjele\Doctrine\Utility\Exception\Exception;
 
 class JsonSearch extends AbstractJsonSearch
@@ -51,29 +51,29 @@ class JsonSearch extends AbstractJsonSearch
 
     public function parse(Parser $parser): void
     {
-        $parser->match(Lexer::T_IDENTIFIER);
-        $parser->match(Lexer::T_OPEN_PARENTHESIS);
+        $parser->match(TokenType::T_IDENTIFIER);
+        $parser->match(TokenType::T_OPEN_PARENTHESIS);
 
         $this->jsonDocExpr = $parser->StringPrimary();
 
-        $parser->match(Lexer::T_COMMA);
+        $parser->match(TokenType::T_COMMA);
 
         $this->parsePathMode($parser);
 
-        $parser->match(Lexer::T_COMMA);
+        $parser->match(TokenType::T_COMMA);
 
         $this->jsonSearchExpr = $parser->StringPrimary();
 
-        if (true === $parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
-            $parser->match(Lexer::T_COMMA);
+        if (true === $parser->getLexer()->isNextToken(TokenType::T_COMMA)) {
+            $parser->match(TokenType::T_COMMA);
             $this->jsonEscapeExpr = $parser->StringPrimary();
 
-            while (true === $parser->getLexer()->isNextToken(Lexer::T_COMMA)) {
-                $parser->match(Lexer::T_COMMA);
+            while (true === $parser->getLexer()->isNextToken(TokenType::T_COMMA)) {
+                $parser->match(TokenType::T_COMMA);
                 $this->jsonPaths[] = $parser->StringPrimary();
             }
         }
 
-        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
+        $parser->match(TokenType::T_CLOSE_PARENTHESIS);
     }
 }

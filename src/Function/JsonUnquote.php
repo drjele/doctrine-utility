@@ -11,9 +11,9 @@ namespace Drjele\Doctrine\Utility\Function;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\ORM\Query\AST\Functions\FunctionNode;
 use Doctrine\ORM\Query\AST\Node;
-use Doctrine\ORM\Query\Lexer;
 use Doctrine\ORM\Query\Parser;
 use Doctrine\ORM\Query\SqlWalker;
+use Doctrine\ORM\Query\TokenType;
 use Drjele\Doctrine\Utility\Exception\Exception;
 
 class JsonUnquote extends FunctionNode
@@ -35,11 +35,11 @@ class JsonUnquote extends FunctionNode
 
     public function parse(Parser $parser): void
     {
-        $parser->match(Lexer::T_IDENTIFIER);
-        $parser->match(Lexer::T_OPEN_PARENTHESIS);
+        $parser->match(TokenType::T_IDENTIFIER);
+        $parser->match(TokenType::T_OPEN_PARENTHESIS);
 
         $this->jsonValExpr = $parser->StringPrimary();
 
-        $parser->match(Lexer::T_CLOSE_PARENTHESIS);
+        $parser->match(TokenType::T_CLOSE_PARENTHESIS);
     }
 }

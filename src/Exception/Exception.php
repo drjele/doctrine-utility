@@ -8,4 +8,6 @@ declare(strict_types=1);
 
 namespace Drjele\Doctrine\Utility\Exception;
 
-class Exception extends \Exception {}
+class Exception extends \Exception
+{
+}
